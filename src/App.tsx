@@ -1,47 +1,21 @@
 import React, {useEffect, useState} from 'react';
 import {
-    ThemeProvider,
+    Accordion,
+    AccordionHeader,
+    AccordionIcon,
+    AccordionItem,
+    AccordionPanel,
+    Box,
     CSSReset,
+    Heading,
     List,
     ListItem,
-    ListIcon,
-    Box,
-    Heading,
-    Accordion,
-    AccordionItem,
-    AccordionHeader,
-    AccordionPanel,
-    AccordionIcon,
-} from '@chakra-ui/core'
+    ThemeProvider,
+} from '@chakra-ui/core';
+import {mockApiServer} from './mockApi/Users';
+import {User} from "./types/User";
 
-
-import {Server} from "miragejs"
-
-
-interface user {
-    id: number,
-    name: string,
-    tasks?: {
-        id: number,
-        description: string
-    }[]
-}
-
-interface userList {
-    users: user[]
-}
-
-const mockUsers: userList = {
-    users: [
-        {id: 1, name: "Bob"},
-        {id: 2, name: "Alice", tasks: [{id: 1, description: "Send Email"}, {id: 2, description: "Schedule Meeting"}]},
-        {id: 33, name: "Matt", tasks: [{id: 1, description: "eat lunch"}]}
-    ]
-}
-
-let server = new Server()
-// @ts-ignore
-server.get("/api/users", mockUsers)
+mockApiServer();
 
 export default function App() {
     let [users, setUsers] = useState([])
@@ -61,7 +35,7 @@ export default function App() {
                 <Heading>You're ToDuezies</Heading>
                 <Box bg="tomato" w="25%" p={4} color="white" rounded="lg">
                     <Accordion allowMultiple={true}>
-                        {users.map((user: user) => (
+                        {users.map((user: User) => (
                             <AccordionItem key={user.id}>
                                 <AccordionHeader>
                                     <Box flex="1" textAlign="left">
