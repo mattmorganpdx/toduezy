@@ -11,22 +11,42 @@ import {
     List,
     ListItem,
     ThemeProvider,
+    Editable, EditableInput, EditablePreview, Button,
 } from '@chakra-ui/core';
 import {mockApiServer} from './mockApi/Users';
 import {User} from "./types/User";
+import {Task} from "./types/Task";
 
 mockApiServer();
 
 export default function App() {
     let [users, setUsers] = useState([])
 
-    useEffect(() => {
+    let loadUsers = () => {
         fetch("/api/users")
             .then((res) => res.json())
             .then((json) => {
                 setUsers(json.users)
             })
+    }
+
+    useEffect(() => {
+        loadUsers()
     }, [])
+
+    useEffect(() => {
+
+    }, [])
+
+    const onUpdate = (id: number, parent: number, text: string) => {
+        fetch("api/tasks", {method: "POST", body: JSON.stringify({id: id, description: text, parent: parent} )})
+            .then(() => loadUsers())
+    }
+
+    const addTask = (id: number) => {
+        fetch("api/tasks", {method: "POST", body: JSON.stringify({description: "", parent: id} )})
+            .then(() => loadUsers())
+    }
 
     return (
         <ThemeProvider>
@@ -44,11 +64,16 @@ export default function App() {
                                     <AccordionIcon/>
                                 </AccordionHeader>
                                 <AccordionPanel pb={4}>
-                                    <List styleType="disc">
-                                        {user.tasks?.map((task: any) => (
-                                            <ListItem key={task.id}>{task.description}</ListItem>
-                                        ))}
-                                    </List>
+                                    {user.tasks?.map((task: any) => (
+                                        <Editable key={task.id} defaultValue={task.description}
+                                                  onSubmit={e => onUpdate(task.id, user.id, e)}>
+                                            <EditablePreview/>
+                                            <EditableInput/>
+                                        </Editable>
+                                    ))}
+                                    <Button variantColor="teal" size="xs" onClick={(e) => {
+                                        e.preventDefault();
+                                        addTask(user.id)}}>Add</Button>
                                 </AccordionPanel>
                             </AccordionItem>
                         ))}

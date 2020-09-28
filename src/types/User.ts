@@ -1,10 +1,9 @@
+import {Task} from "./Task";
+
 export interface User {
     id: number,
     name: string,
-    tasks?: {
-        id: number,
-        description: string
-    }[]
+    tasks?: Task[]
 }
 
 export interface UserList {
