@@ -10,6 +10,8 @@ import {
     Heading,
     List,
     ListItem,
+    Icon,
+    IconButton,
     ThemeProvider,
     Editable, EditableInput, EditablePreview, Button,
 } from '@chakra-ui/core';
@@ -20,7 +22,8 @@ import {Task} from "./types/Task";
 mockApiServer();
 
 export default function App() {
-    let [users, setUsers] = useState([])
+    let [users, setUsers] = useState([]);
+    let [adding, setAdding] = useState(false);
 
     let loadUsers = () => {
         fetch("/api/users")
@@ -39,13 +42,15 @@ export default function App() {
     }, [])
 
     const onUpdate = (id: number, parent: number, text: string) => {
-        fetch("api/tasks", {method: "POST", body: JSON.stringify({id: id, description: text, parent: parent} )})
+        fetch("api/tasks", {method: "POST", body: JSON.stringify({id: id, description: text, parent: parent})})
             .then(() => loadUsers())
     }
 
-    const addTask = (id: number) => {
-        fetch("api/tasks", {method: "POST", body: JSON.stringify({description: "", parent: id} )})
-            .then(() => loadUsers())
+    const addTask = async (id: number): Promise<void> => {
+        setAdding(true);
+        await fetch("api/tasks", {method: "POST", body: JSON.stringify({description: "", parent: id})})
+            .then(() => loadUsers());
+        setAdding(false);
     }
 
     return (
@@ -71,9 +76,19 @@ export default function App() {
                                             <EditableInput/>
                                         </Editable>
                                     ))}
-                                    <Button variantColor="teal" size="xs" onClick={(e) => {
-                                        e.preventDefault();
-                                        addTask(user.id)}}>Add</Button>
+                                    <IconButton
+                                        icon="add"
+                                        aria-label={"add item"}
+                                        variant={"ghost"}
+                                        variantColor="cyan"
+                                        size="xs"
+                                        isRound={true}
+                                        isLoading={adding}
+                                        onClick={(e) => {
+
+                                            e.preventDefault();
+                                            addTask(user.id).then();
+                                        }}/>
                                 </AccordionPanel>
                             </AccordionItem>
                         ))}
