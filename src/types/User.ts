@@ -1,8 +1,11 @@
 import {Task} from "./Task";
 
-export interface User {
-    id: number,
+export interface UserModel {
     name: string,
+}
+
+export interface User extends UserModel{
+    id: number,
     tasks?: Task[]
 }
 
