@@ -9,7 +9,7 @@ import {
     ModalOverlay,
     useDisclosure
 } from "@chakra-ui/core";
-import React, {useRef} from "react";
+import React, {useRef, KeyboardEvent} from "react";
 import {addUser} from "../api/AddContact";
 
 export function AddUserModal(props: any) {
@@ -22,6 +22,10 @@ export function AddUserModal(props: any) {
             props.reload();
         }
     }
+    const saveOnEnterHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e?.key === 'Enter')
+            saveHandler();
+    }
     return (
         <>
             <IconButton
@@ -32,10 +36,12 @@ export function AddUserModal(props: any) {
                 size="xs"
                 isRound={true}
                 onClick={onOpen}
+                children={null}
             />
             <Modal
                 isOpen={isOpen}
                 onClose={onClose}
+                finalFocusRef={props.finalFocusRef}
             >
                 <ModalOverlay />
                 <ModalContent>
@@ -44,7 +50,7 @@ export function AddUserModal(props: any) {
                     <ModalBody pb={6}>
                         <FormControl>
                             <FormLabel>Contact Name</FormLabel>
-                            <Input placeholder="New Contact" ref={newUserName}/>
+                            <Input placeholder="New Contact" ref={newUserName} onKeyPress={(e: KeyboardEvent<HTMLInputElement>) => saveOnEnterHandler(e)}/>
                         </FormControl>
                     </ModalBody>
 

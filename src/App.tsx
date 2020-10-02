@@ -13,14 +13,8 @@ import {
     Icon,
     IconButton,
     ThemeProvider,
-    Editable, EditableInput, EditablePreview, Button,
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalFooter,
-    ModalBody,
-    ModalCloseButton, useDisclosure,
+    Editable, EditableInput, EditablePreview,
+    Divider,
 } from '@chakra-ui/core';
 import {mockApiServer} from './mockApi/Users';
 import {User} from "./types/User";
@@ -45,9 +39,7 @@ export default function App() {
         loadUsers()
     }, [])
 
-    useEffect(() => {
-
-    }, [])
+    const finalRef = useRef();
 
     const onUpdate = (id: number, parent: number, text: string) => {
         fetch("api/tasks", {method: "POST", body: JSON.stringify({id: id, description: text, parent: parent})})
@@ -66,9 +58,10 @@ export default function App() {
     return (
         <ThemeProvider>
             <CSSReset/>
-            <Box bg="#FFA500" w="75%" p={4} color="white">
+            <Box ref={finalRef} bg="#FFA500" w="75%" p={4} color="white">
                 <Heading>You're ToDuezies</Heading>
-                <AddUserModal reload={loadUsers}/>
+                <AddUserModal reload={loadUsers} finalFocusRef={finalRef}/>
+                <Divider/>
                 <Box bg="tomato" w="25%" p={4} color="white" rounded="lg">
                     <Accordion allowMultiple={true}>
                         {users.map((user: User) => (
@@ -100,7 +93,9 @@ export default function App() {
 
                                             e.preventDefault();
                                             addTask(user.id).then();
-                                        }}/>
+                                        }}
+                                        children={null}
+                                    />
                                 </AccordionPanel>
                             </AccordionItem>
                         ))}
