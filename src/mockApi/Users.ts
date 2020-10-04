@@ -13,10 +13,12 @@ function mockApiServer() {
                     id: 1,
                     description: "Send Email",
                     parent: 2,
+                    status: "OPEN",
                 }, {
                     id: 2,
                     description: "Schedule Meeting",
                     parent: 2,
+                    status: "OPEN",
                 }]
             },
             {
@@ -25,7 +27,8 @@ function mockApiServer() {
                 tasks: [{
                     id: 1,
                     description: "eat lunch",
-                    parent: 3
+                    parent: 3,
+                    status: "OPEN"
                 }]
             }
         ]
@@ -50,14 +53,26 @@ function mockApiServer() {
     // @ts-ignore
     server.post("/api/tasks", (schema, request) => {
         let task: Task = JSON.parse(request.requestBody);
+        if (!task.description)
+            task.description = "";
         if (!task.id) {
             task.id = nextTaskId++;
+            task.status = "OPEN"
             mockUsers.users
                 .find(user => user.id === task.parent)?.tasks?.push(task)
         } else {
-            mockUsers.users.find(user => user.id === task.parent)?.tasks?.find(t => t.id === task.id)?.description.replace(/\*/, task.description);
+            mockUsers.users.find(user => user.id === task.parent)?.tasks?.find(t => t.id === task.id)?.description?.replace(/\*/, task.description);
         }
         return task
+    });
+    //@ts-ignore
+    server.delete("/api/tasks", (schema, request) => {
+        let task: Task = JSON.parse(request.requestBody);
+        console.log(task)
+        if (task.id && task.parent) {
+            mockUsers.users.find(user => user.id === task.parent)?.tasks?.find(t => t.id === task.id)?.status?.replace(/\*/, "DELETED")
+            console.log(`logged from delete ${mockUsers}`)
+        }
     });
 }
 

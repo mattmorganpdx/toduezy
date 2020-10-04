@@ -14,7 +14,7 @@ import {
     IconButton,
     ThemeProvider,
     Editable, EditableInput, EditablePreview,
-    Divider,
+    Divider, SimpleGrid,
 } from '@chakra-ui/core';
 import {mockApiServer} from './mockApi/Users';
 import {User} from "./types/User";
@@ -31,6 +31,7 @@ export default function App() {
         fetch("/api/users")
             .then((res) => res.json())
             .then((json) => {
+                console.log(json)
                 setUsers(json.users)
             })
     }
@@ -54,6 +55,11 @@ export default function App() {
         setAdding({id: 0});
     }
 
+    const deleteTask = async (parentId:number, taskId: number): Promise<void> => {
+        await fetch("api/tasks", {method: "DELETE", body: JSON.stringify({id: taskId, parent: parentId})})
+            .then(() => loadUsers());
+    }
+
 
     return (
         <ThemeProvider>
@@ -73,12 +79,28 @@ export default function App() {
                                     <AccordionIcon/>
                                 </AccordionHeader>
                                 <AccordionPanel pb={4}>
-                                    {user.tasks?.map((task: any) => (
-                                        <Editable key={task.id} defaultValue={task.description}
+                                    {user.tasks?.filter(task => task.status !== "DELETED").map((task: any) => (
+                                        <SimpleGrid key={`${task.id}-grid`} columns={2} spacing={10}>
+                                        <Editable key={`${task.id}-task`} defaultValue={task.description}
                                                   onSubmit={e => onUpdate(task.id, user.id, e)}>
                                             <EditablePreview/>
                                             <EditableInput/>
                                         </Editable>
+                                            <IconButton
+                                                key={`${task.id}-delete`}
+                                                icon={"delete"}
+                                                aria-label={"delete item"}
+                                                variant={"ghost"}
+                                                variantColor="cyan"
+                                                size="xs"
+                                                isRound={true}
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    deleteTask(user.id, task.id).then()
+                                                }}
+                                                children={null}
+                                            />
+                                        </SimpleGrid>
                                     ))}
                                     <IconButton
                                         key={user.id}
