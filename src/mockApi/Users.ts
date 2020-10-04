@@ -67,10 +67,31 @@ function mockApiServer() {
     });
     //@ts-ignore
     server.delete("/api/tasks", (schema, request) => {
-        let task: Task = JSON.parse(request.requestBody);
-        console.log(task)
-        if (task.id && task.parent) {
-            mockUsers.users.find(user => user.id === task.parent)?.tasks?.find(t => t.id === task.id)?.status?.replace(/\*/, "DELETED")
+        let taskToDelete: Task = JSON.parse(request.requestBody);
+        console.log(taskToDelete)
+        if (taskToDelete.id && taskToDelete.parent) {
+            const userIndex = mockUsers.users.findIndex(user => user.id === taskToDelete.parent)
+            let task;
+            if (userIndex)
+                task = mockUsers.users[userIndex].tasks?.find(t => t.id === taskToDelete.id)
+            if (task)
+                task.status = "DELETED"
+
+            console.log(`logged from delete ${mockUsers}`)
+        }
+    });
+    //@ts-ignore
+    server.put("/api/tasks", (schema, request) => {
+        let taskToDelete: Task = JSON.parse(request.requestBody);
+        console.log(taskToDelete)
+        if (taskToDelete.id && taskToDelete.parent) {
+            const userIndex = mockUsers.users.findIndex(user => user.id === taskToDelete.parent)
+            let task;
+            if (userIndex)
+                task = mockUsers.users[userIndex].tasks?.find(t => t.id === taskToDelete.id)
+            if (task)
+                task.status = "COMPLETE"
+
             console.log(`logged from delete ${mockUsers}`)
         }
     });

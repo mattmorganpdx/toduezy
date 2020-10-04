@@ -55,8 +55,13 @@ export default function App() {
         setAdding({id: 0});
     }
 
-    const deleteTask = async (parentId:number, taskId: number): Promise<void> => {
+    const deleteTask = async (parentId: number, taskId: number): Promise<void> => {
         await fetch("api/tasks", {method: "DELETE", body: JSON.stringify({id: taskId, parent: parentId})})
+            .then(() => loadUsers());
+    }
+
+    const completeTask = async (parentId: number, taskId: number): Promise<void> => {
+        await fetch("api/tasks", {method: "PUT", body: JSON.stringify({id: taskId, parent: parentId})})
             .then(() => loadUsers());
     }
 
@@ -68,7 +73,7 @@ export default function App() {
                 <Heading>You're ToDuezies</Heading>
                 <AddUserModal reload={loadUsers} finalFocusRef={finalRef}/>
                 <Divider/>
-                <Box bg="tomato" w="25%" p={4} color="white" rounded="lg">
+                <Box bg="tomato" w="50%" p={4} color="white" rounded="lg">
                     <Accordion allowMultiple={true}>
                         {users.map((user: User) => (
                             <AccordionItem key={user.id}>
@@ -81,25 +86,41 @@ export default function App() {
                                 <AccordionPanel pb={4}>
                                     {user.tasks?.filter(task => task.status !== "DELETED").map((task: any) => (
                                         <SimpleGrid key={`${task.id}-grid`} columns={2} spacing={10}>
-                                        <Editable key={`${task.id}-task`} defaultValue={task.description}
-                                                  onSubmit={e => onUpdate(task.id, user.id, e)}>
-                                            <EditablePreview/>
-                                            <EditableInput/>
-                                        </Editable>
-                                            <IconButton
-                                                key={`${task.id}-delete`}
-                                                icon={"delete"}
-                                                aria-label={"delete item"}
-                                                variant={"ghost"}
-                                                variantColor="cyan"
-                                                size="xs"
-                                                isRound={true}
-                                                onClick={(e) => {
-                                                    e.preventDefault();
-                                                    deleteTask(user.id, task.id).then()
-                                                }}
-                                                children={null}
-                                            />
+                                            <Editable key={`${task.id}-task`} defaultValue={task.description}
+                                                      onSubmit={e => onUpdate(task.id, user.id, e)}>
+                                                <EditablePreview textDecoration={task.status === "COMPLETE" ? "line-through" : ""}/>
+                                                <EditableInput/>
+                                            </Editable>
+                                            <SimpleGrid key={`${task.id}-grid-inner`} columns={2} spacing={5}>
+                                                <IconButton
+                                                    key={`${task.id}-complete`}
+                                                    icon={"check"}
+                                                    aria-label={"complete item"}
+                                                    variant={"ghost"}
+                                                    variantColor="cyan"
+                                                    size="xs"
+                                                    isRound={true}
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        completeTask(user.id, task.id).then()
+                                                    }}
+                                                    children={null}
+                                                />
+                                                <IconButton
+                                                    key={`${task.id}-delete`}
+                                                    icon={"delete"}
+                                                    aria-label={"delete item"}
+                                                    variant={"ghost"}
+                                                    variantColor="cyan"
+                                                    size="xs"
+                                                    isRound={true}
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        deleteTask(user.id, task.id).then()
+                                                    }}
+                                                    children={null}
+                                                />
+                                            </SimpleGrid>
                                         </SimpleGrid>
                                     ))}
                                     <IconButton
