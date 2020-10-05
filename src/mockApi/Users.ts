@@ -1,4 +1,4 @@
-import {Server} from "miragejs"
+import {Response, Server} from "miragejs"
 import {User, UserList, UserModel} from "../types/User";
 import {Task} from "../types/Task";
 
@@ -38,6 +38,14 @@ function mockApiServer() {
     let nextTaskId = 4;
 
     let server = new Server();
+    // @ts-ignore
+    server.post("login", (schema, request) => {
+        let login = JSON.parse(request.requestBody)
+        if (login.email === "admin@test.com" && login.password === "tVF!n@UiAS9K6Ly")
+            return new Response(200);
+        return new Response(400);
+    });
+
     // @ts-ignore
     server.get("/api/users", mockUsers);
     // @ts-ignore

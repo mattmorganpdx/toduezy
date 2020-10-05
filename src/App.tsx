@@ -19,7 +19,9 @@ import {
 import {mockApiServer} from './mockApi/Users';
 import {User} from "./types/User";
 import {Task} from "./types/Task";
+import LoginForm from "./pages/LoginForm"
 import {AddUserModal} from "./components/AddUserModal";
+import PostLogin from "./components/PostLogin";
 
 mockApiServer();
 
@@ -39,6 +41,15 @@ export default function App() {
     useEffect(() => {
         loadUsers()
     }, [])
+
+    const [loginContext, setLoginContext] = useState({
+        email: '',
+        password: '',
+        showPassword: false,
+        error: '',
+        isLoading: false,
+        isLoggedIn: false
+    });
 
     const finalRef = useRef();
 
@@ -69,7 +80,8 @@ export default function App() {
     return (
         <ThemeProvider>
             <CSSReset/>
-            <Box ref={finalRef} bg="#FFA500" w="75%" p={4} color="white">
+            {!loginContext.isLoggedIn ? <LoginForm loginContext={loginContext} setLoginContext={setLoginContext}/> :
+            (<Box ref={finalRef} bg="#FFA500" w="75%" p={4} color="white">
                 <Heading>You're ToDuezies</Heading>
                 <AddUserModal reload={loadUsers} finalFocusRef={finalRef}/>
                 <Divider/>
@@ -144,7 +156,8 @@ export default function App() {
                         ))}
                     </Accordion>
                 </Box>
-            </Box>
+                <PostLogin formContext={loginContext} setContext={setLoginContext} />
+            </Box>)}
         </ThemeProvider>
     )
 }
