@@ -14,8 +14,7 @@ export default function PostLogin({ formContext, setContext }) {
     })
 
     return (
-        <Box textAlign="center">
-            <Text>{formContext.email} logged in!</Text>
+        <Box textAlign="center" w="15%">
             <Button
                 variantColor="orange"
                 variant="outline"

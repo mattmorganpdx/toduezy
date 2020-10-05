@@ -43,6 +43,8 @@ function mockApiServer() {
         let login = JSON.parse(request.requestBody)
         if (login.email === "admin@test.com" && login.password === "tVF!n@UiAS9K6Ly")
             return new Response(200);
+        if (login.email === "test@test.com" && login.password === "passw0rd")
+            return new Response(200);
         return new Response(400);
     });
 
