@@ -1,12 +1,8 @@
+import {Box, Button} from '@chakra-ui/core';
 import React from 'react';
-import {
-    Box,
-    Button,
-    Text
-} from '@chakra-ui/core';
 
-export default function PostLogin({ formContext, setContext }) {
-    const logout = () =>  setContext(prevState => {
+export default function PostLogin({formContext, setContext}) {
+    const logout = () => setContext(prevState => {
         return {
             ...prevState,
             isLoggedIn: false,
@@ -23,7 +19,7 @@ export default function PostLogin({ formContext, setContext }) {
                 onClick={logout}
             >
                 Sign out
-</Button>
+            </Button>
         </Box>
     );
 };

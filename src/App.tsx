@@ -1,4 +1,3 @@
-import React, {useEffect, useRef, useState} from 'react';
 import {
     Accordion,
     AccordionHeader,
@@ -7,21 +6,21 @@ import {
     AccordionPanel,
     Box,
     CSSReset,
+    Divider,
+    Editable,
+    EditableInput,
+    EditablePreview,
     Heading,
-    List,
-    ListItem,
-    Icon,
     IconButton,
+    SimpleGrid,
     ThemeProvider,
-    Editable, EditableInput, EditablePreview,
-    Divider, SimpleGrid,
 } from '@chakra-ui/core';
-import {mockApiServer} from './mockApi/Users';
-import {User} from "./types/User";
-import {Task} from "./types/Task";
-import LoginForm from "./pages/LoginForm"
+import React, {useEffect, useRef, useState} from 'react';
 import {AddUserModal} from "./components/AddUserModal";
-import PostLogin from "./components/PostLogin";
+import PostLogin from "./components/Login/PostLogin";
+import {mockApiServer} from './mockApi/Users';
+import LoginForm from "./pages/LoginForm"
+import {User} from "./types/User";
 
 mockApiServer();
 
@@ -81,83 +80,84 @@ export default function App() {
         <ThemeProvider>
             <CSSReset/>
             {!loginContext.isLoggedIn ? <LoginForm loginContext={loginContext} setLoginContext={setLoginContext}/> :
-            (<Box ref={finalRef} bg="#FFA500" w="75%" p={4} color="white">
-                <Heading>You're ToDuezies</Heading>
-                <AddUserModal reload={loadUsers} finalFocusRef={finalRef}/>
-                <Divider/>
-                <Box bg="tomato" w="50%" p={4} color="white" rounded="lg">
-                    <Accordion allowMultiple={true}>
-                        {users.map((user: User) => (
-                            <AccordionItem key={user.id}>
-                                <AccordionHeader>
-                                    <Box flex="1" textAlign="left">
-                                        {user.name}
-                                    </Box>
-                                    <AccordionIcon/>
-                                </AccordionHeader>
-                                <AccordionPanel pb={4}>
-                                    {user.tasks?.filter(task => task.status !== "DELETED").map((task: any) => (
-                                        <SimpleGrid key={`${task.id}-grid`} columns={2} spacing={10}>
-                                            <Editable key={`${task.id}-task`} defaultValue={task.description}
-                                                      onSubmit={e => onUpdate(task.id, user.id, e)}>
-                                                <EditablePreview textDecoration={task.status === "COMPLETE" ? "line-through" : ""}/>
-                                                <EditableInput/>
-                                            </Editable>
-                                            <SimpleGrid key={`${task.id}-grid-inner`} columns={2} spacing={5}>
-                                                <IconButton
-                                                    key={`${task.id}-complete`}
-                                                    icon={"check"}
-                                                    aria-label={"complete item"}
-                                                    variant={"ghost"}
-                                                    variantColor="cyan"
-                                                    size="xs"
-                                                    isRound={true}
-                                                    onClick={(e) => {
-                                                        e.preventDefault();
-                                                        completeTask(user.id, task.id).then()
-                                                    }}
-                                                    children={null}
-                                                />
-                                                <IconButton
-                                                    key={`${task.id}-delete`}
-                                                    icon={"delete"}
-                                                    aria-label={"delete item"}
-                                                    variant={"ghost"}
-                                                    variantColor="cyan"
-                                                    size="xs"
-                                                    isRound={true}
-                                                    onClick={(e) => {
-                                                        e.preventDefault();
-                                                        deleteTask(user.id, task.id).then()
-                                                    }}
-                                                    children={null}
-                                                />
+                (<Box ref={finalRef} bg="#FFA500" w="75%" p={4} color="white">
+                    <Heading>You're ToDuezies</Heading>
+                    <AddUserModal reload={loadUsers} finalFocusRef={finalRef}/>
+                    <Divider/>
+                    <Box bg="tomato" w="50%" p={4} color="white" rounded="lg">
+                        <Accordion allowMultiple={true}>
+                            {users.map((user: User) => (
+                                <AccordionItem key={user.id}>
+                                    <AccordionHeader>
+                                        <Box flex="1" textAlign="left">
+                                            {user.name}
+                                        </Box>
+                                        <AccordionIcon/>
+                                    </AccordionHeader>
+                                    <AccordionPanel pb={4}>
+                                        {user.tasks?.filter(task => task.status !== "DELETED").map((task: any) => (
+                                            <SimpleGrid key={`${task.id}-grid`} columns={2} spacing={10}>
+                                                <Editable key={`${task.id}-task`} defaultValue={task.description}
+                                                          onSubmit={e => onUpdate(task.id, user.id, e)}>
+                                                    <EditablePreview
+                                                        textDecoration={task.status === "COMPLETE" ? "line-through" : ""}/>
+                                                    <EditableInput/>
+                                                </Editable>
+                                                <SimpleGrid key={`${task.id}-grid-inner`} columns={2} spacing={5}>
+                                                    <IconButton
+                                                        key={`${task.id}-complete`}
+                                                        icon={"check"}
+                                                        aria-label={"complete item"}
+                                                        variant={"ghost"}
+                                                        variantColor="cyan"
+                                                        size="xs"
+                                                        isRound={true}
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            completeTask(user.id, task.id).then()
+                                                        }}
+                                                        children={null}
+                                                    />
+                                                    <IconButton
+                                                        key={`${task.id}-delete`}
+                                                        icon={"delete"}
+                                                        aria-label={"delete item"}
+                                                        variant={"ghost"}
+                                                        variantColor="cyan"
+                                                        size="xs"
+                                                        isRound={true}
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            deleteTask(user.id, task.id).then()
+                                                        }}
+                                                        children={null}
+                                                    />
+                                                </SimpleGrid>
                                             </SimpleGrid>
-                                        </SimpleGrid>
-                                    ))}
-                                    <IconButton
-                                        key={user.id}
-                                        icon="add"
-                                        aria-label={"add item"}
-                                        variant={"ghost"}
-                                        variantColor="cyan"
-                                        size="xs"
-                                        isRound={true}
-                                        isLoading={adding.id === user.id}
-                                        onClick={(e) => {
+                                        ))}
+                                        <IconButton
+                                            key={user.id}
+                                            icon="add"
+                                            aria-label={"add item"}
+                                            variant={"ghost"}
+                                            variantColor="cyan"
+                                            size="xs"
+                                            isRound={true}
+                                            isLoading={adding.id === user.id}
+                                            onClick={(e) => {
 
-                                            e.preventDefault();
-                                            addTask(user.id).then();
-                                        }}
-                                        children={null}
-                                    />
-                                </AccordionPanel>
-                            </AccordionItem>
-                        ))}
-                    </Accordion>
-                </Box>
-                <PostLogin formContext={loginContext} setContext={setLoginContext} />
-            </Box>)}
+                                                e.preventDefault();
+                                                addTask(user.id).then();
+                                            }}
+                                            children={null}
+                                        />
+                                    </AccordionPanel>
+                                </AccordionItem>
+                            ))}
+                        </Accordion>
+                    </Box>
+                    <PostLogin formContext={loginContext} setContext={setLoginContext}/>
+                </Box>)}
         </ThemeProvider>
     )
 }

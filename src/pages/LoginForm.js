@@ -4,11 +4,11 @@ import {
     Box,
     Heading
 } from '@chakra-ui/core';
-import ErrorMessage from '../components/ErrorMessage';
-import Email from '../components/Email';
-import Password from '../components/Password';
-import Submit from '../components/Submit';
-import PostLogin from '../components/PostLogin';
+import ErrorMessage from '../components/Login/ErrorMessage';
+import Email from '../components/Login/Email';
+import Password from '../components/Login/Password';
+import Submit from '../components/Login/Submit';
+import PostLogin from '../components/Login/PostLogin';
 
 
 export default function LoginForm({loginContext, setLoginContext}) {
