@@ -1,14 +1,9 @@
-import React, {useState} from 'react';
-import {
-    Flex,
-    Box,
-    Heading
-} from '@chakra-ui/core';
-import ErrorMessage from '../components/Login/ErrorMessage';
+import {Box, Flex, Heading} from '@chakra-ui/core';
+import React from 'react';
 import Email from '../components/Login/Email';
+import ErrorMessage from '../components/Login/ErrorMessage';
 import Password from '../components/Login/Password';
 import Submit from '../components/Login/Submit';
-import PostLogin from '../components/Login/PostLogin';
 
 
 export default function LoginForm({loginContext, setLoginContext}) {
@@ -17,7 +12,6 @@ export default function LoginForm({loginContext, setLoginContext}) {
     const userLogin = async login => {
         await fetch('login', {method: "POST", body: JSON.stringify(login)}).then(
             res => {
-                console.log(res)
                 if (res.status === 200) {
                     return Promise.resolve();
                 } else {
