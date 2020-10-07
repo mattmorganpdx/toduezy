@@ -1,19 +1,23 @@
 import {
-    AccordionPanel,
-    Button, FormControl, FormLabel, IconButton, Input,
+    Button,
+    FormControl,
+    FormLabel,
+    IconButton,
+    Input,
     Modal,
     ModalBody,
     ModalCloseButton,
-    ModalContent, ModalFooter,
+    ModalContent,
+    ModalFooter,
     ModalHeader,
     ModalOverlay,
     useDisclosure
 } from "@chakra-ui/core";
-import React, {useRef, KeyboardEvent} from "react";
-import {addUser} from "../api/AddContact";
+import React, {KeyboardEvent, useRef} from "react";
+import {addUser} from "../../api/AddContact";
 
-export function AddUserModal(props: any) {
-    const { isOpen, onOpen, onClose } = useDisclosure();
+export function AddContactModal(props: any) {
+    const {isOpen, onOpen, onClose} = useDisclosure();
     const newUserName = useRef<HTMLInputElement>(null)
     const saveHandler = () => {
         if (newUserName?.current?.value) {
@@ -43,14 +47,15 @@ export function AddUserModal(props: any) {
                 onClose={onClose}
                 finalFocusRef={props.finalFocusRef}
             >
-                <ModalOverlay />
+                <ModalOverlay/>
                 <ModalContent>
-                    <ModalHeader>Create your account</ModalHeader>
-                    <ModalCloseButton />
+                    <ModalHeader>Add a new stakeholder</ModalHeader>
+                    <ModalCloseButton/>
                     <ModalBody pb={6}>
                         <FormControl>
                             <FormLabel>Contact Name</FormLabel>
-                            <Input placeholder="New Contact" ref={newUserName} onKeyPress={(e: KeyboardEvent<HTMLInputElement>) => saveOnEnterHandler(e)}/>
+                            <Input placeholder="New Contact" ref={newUserName}
+                                   onKeyPress={(e: KeyboardEvent<HTMLInputElement>) => saveOnEnterHandler(e)}/>
                         </FormControl>
                     </ModalBody>
 

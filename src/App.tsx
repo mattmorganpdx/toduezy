@@ -16,7 +16,7 @@ import {
     ThemeProvider,
 } from '@chakra-ui/core';
 import React, {useEffect, useRef, useState} from 'react';
-import {AddUserModal} from "./components/AddUserModal";
+import {AddContactModal} from "./components/ToDo/AddContactModal";
 import PostLogin from "./components/Login/PostLogin";
 import {mockApiServer} from './mockApi/Users';
 import LoginForm from "./pages/LoginForm"
@@ -82,7 +82,7 @@ export default function App() {
             {!loginContext.isLoggedIn ? <LoginForm loginContext={loginContext} setLoginContext={setLoginContext}/> :
                 (<Box ref={finalRef} bg="#FFA500" w="75%" p={4} color="white">
                     <Heading>You're ToDuezies</Heading>
-                    <AddUserModal reload={loadUsers} finalFocusRef={finalRef}/>
+                    <AddContactModal reload={loadUsers} finalFocusRef={finalRef}/>
                     <Divider/>
                     <Box bg="tomato" w="50%" p={4} color="white" rounded="lg">
                         <Accordion allowMultiple={true}>
