@@ -41,7 +41,7 @@ export default function TaskItem({task, contactId, loadUsers}: Props) {
                     variantColor="cyan"
                     size="xs"
                     isRound={true}
-                    onClick={(e) => {
+                    onClick={(e: React.MouseEvent<any>) => {
                         e.preventDefault();
                         completeTask(contactId, task.id).then()
                     }}
@@ -55,7 +55,7 @@ export default function TaskItem({task, contactId, loadUsers}: Props) {
                     variantColor="cyan"
                     size="xs"
                     isRound={true}
-                    onClick={(e) => {
+                    onClick={(e: React.MouseEvent<any>) => {
                         e.preventDefault();
                         deleteTask(contactId, task.id).then()
                     }}

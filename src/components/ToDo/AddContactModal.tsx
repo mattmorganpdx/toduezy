@@ -13,17 +13,22 @@ import {
     ModalOverlay,
     useDisclosure
 } from "@chakra-ui/core";
-import React, {KeyboardEvent, useRef} from "react";
+import React, {KeyboardEvent, Ref, useRef} from "react";
 import {addUser} from "../../api/AddContact";
 
-export function AddContactModal(props: any) {
+type Props = {
+    loadUsers: Function,
+    finalFocusRef: React.MutableRefObject<any>
+}
+
+export function AddContactModal({loadUsers, finalFocusRef}: Props) {
     const {isOpen, onOpen, onClose} = useDisclosure();
     const newUserName = useRef<HTMLInputElement>(null)
     const saveHandler = () => {
         if (newUserName?.current?.value) {
             addUser(newUserName.current.value)
             onClose();
-            props.reload();
+            loadUsers();
         }
     }
     const saveOnEnterHandler = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -45,7 +50,7 @@ export function AddContactModal(props: any) {
             <Modal
                 isOpen={isOpen}
                 onClose={onClose}
-                finalFocusRef={props.finalFocusRef}
+                finalFocusRef={finalFocusRef}
             >
                 <ModalOverlay/>
                 <ModalContent>
