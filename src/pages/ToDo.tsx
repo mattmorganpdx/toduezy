@@ -56,8 +56,8 @@ export default function ToDo({loginContext, setLoginContext}: Props) {
                             <AccordionIcon/>
                         </AccordionHeader>
                         <AccordionPanel pb={4}>
-                            {user.tasks?.filter(task => task.status !== "DELETED").map((task: Task) => (
-                                <TaskItem task={task} contactId={user.id} loadUsers={loadUsers}/>
+                            {user.tasks?.filter(task => task.status !== "DELETED").map((task: Task, idx:number) => (
+                                <TaskItem key={idx} task={task} contactId={user.id} loadUsers={loadUsers}/>
                             ))}
                             <AddTask contactId={user.id} loadUsers={loadUsers}/>
                         </AccordionPanel>
@@ -65,6 +65,6 @@ export default function ToDo({loginContext, setLoginContext}: Props) {
                 ))}
             </Accordion>
         </Box>
-        <PostLogin formContext={loginContext} setContext={setLoginContext}/>
+        <PostLogin setContext={setLoginContext}/>
     </Box>)
 }

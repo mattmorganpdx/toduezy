@@ -1,8 +1,13 @@
 import {Box, Button} from '@chakra-ui/core';
 import React from 'react';
+import {LoginContext} from "../../types/LoginContext";
 
-export default function PostLogin({formContext, setContext}) {
-    const logout = () => setContext(prevState => {
+type Props = {
+    setContext: Function
+}
+
+export default function PostLogin({setContext}: Props) {
+    const logout = () => setContext((prevState: LoginContext) => {
         return {
             ...prevState,
             isLoggedIn: false,

@@ -13,7 +13,7 @@ import {
     ModalOverlay,
     useDisclosure
 } from "@chakra-ui/core";
-import React, {KeyboardEvent, Ref, useRef} from "react";
+import React, {KeyboardEvent, useRef} from "react";
 import {addUser} from "../../api/AddContact";
 
 type Props = {

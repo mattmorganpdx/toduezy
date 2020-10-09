@@ -4,12 +4,22 @@ import Email from '../components/Login/Email';
 import ErrorMessage from '../components/Login/ErrorMessage';
 import Password from '../components/Login/Password';
 import Submit from '../components/Login/Submit';
+import {LoginContext} from "../types/LoginContext";
+
+type Props = {
+    loginContext: LoginContext,
+    setLoginContext: Function
+}
+
+type Login = {
+    email: string,
+    password: string
+}
+
+export default function LoginForm({loginContext, setLoginContext}: Props) {
 
 
-export default function LoginForm({loginContext, setLoginContext}) {
-
-
-    const userLogin = async login => {
+    const userLogin = async (login: Login) => {
         await fetch('login', {method: "POST", body: JSON.stringify(login)}).then(
             res => {
                 if (res.status === 200) {
@@ -21,16 +31,16 @@ export default function LoginForm({loginContext, setLoginContext}) {
         )
     }
 
-    const handleSubmit = event => {
+    const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
-        setLoginContext(prevState => {
+        setLoginContext((prevState: LoginContext) => {
             return {
                 ...prevState,
                 isLoading: true,
             };
         });
         userLogin({email: loginContext.email, password: loginContext.password}).then(() => {
-            setLoginContext(prevState => {
+            setLoginContext((prevState: LoginContext) => {
                 return {
                     ...prevState,
                     isLoggedIn: true,
@@ -40,7 +50,7 @@ export default function LoginForm({loginContext, setLoginContext}) {
                 };
             });
         }).catch(() => {
-            setLoginContext(prevState => {
+            setLoginContext((prevState: LoginContext) => {
                 return {
                     ...prevState,
                     error: 'Invalid username or password',
@@ -55,8 +65,6 @@ export default function LoginForm({loginContext, setLoginContext}) {
     return (
         <Flex width="full" align="center" justifyContent="center">
             <Box p={8} maxWidth="500px" borderWidth={1} borderRadius={8} boxShadow="lg">
-
-
                 <Box p={2}>
                     <Box textAlign="center">
                         <Heading>Login</Heading>
@@ -70,8 +78,6 @@ export default function LoginForm({loginContext, setLoginContext}) {
                         <Submit formContext={loginContext}/>
                     </form>
                 </Box>
-
-
             </Box>
         </Flex>
     );

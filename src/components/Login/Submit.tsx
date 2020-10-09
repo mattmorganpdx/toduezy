@@ -1,7 +1,12 @@
 import React from 'react';
 import {Button, CircularProgress} from '@chakra-ui/core';
+import {LoginContext} from "../../types/LoginContext";
 
-export default function Submit({ formContext }) {
+type Props = {
+    formContext: LoginContext
+}
+
+export default function Submit({ formContext }: Props) {
     return (
         <Button
             width="full"
