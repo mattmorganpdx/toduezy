@@ -12,9 +12,6 @@ export default function Email({setContext}: Props) {
     return (
         <FormControl isRequired>
             <FormLabel>Email</FormLabel>
-            {/*
-            // TODO: Find out why input doesn't accept onChange
-            // @ts-ignore */}
             <Input
                 type="email"
                 placeholder="test@test.com"
