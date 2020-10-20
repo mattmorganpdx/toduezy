@@ -1,15 +1,17 @@
-const mongoose = require('mongoose');
-const passport = require('passport');
+import * as dynamoose from "dynamoose";
+import passport from 'passport'
 const router = require('express').Router();
 const auth = require('./auth');
-const Users = mongoose.model('Users');
+import {Requst, Response, Next} from "express"
+import User from "../models/Users";
 
 //POST new user route (optional, everyone has access)
-router.post('/', auth.optional, (req, res, next) => {
+router.post('/', auth.optional, (req: Requst, res: Response, next: Next) => {
+  console.log(req.body)
   const { body: { user } } = req;
 
   if(!user) {
-    return res.status(422).json({
+    return res.status(422).send({
       errors: {
         user: 'is required',
       },
@@ -17,7 +19,7 @@ router.post('/', auth.optional, (req, res, next) => {
   }
 
   if(!user.email) {
-    return res.status(422).json({
+    return res.status(422).send({
       errors: {
         email: 'is required',
       },
@@ -25,27 +27,26 @@ router.post('/', auth.optional, (req, res, next) => {
   }
 
   if(!user.password) {
-    return res.status(422).json({
+    return res.status(422).send({
       errors: {
         password: 'is required',
       },
     });
   }
 
-  const finalUser = new Users(user);
-
-  finalUser.setPassword(user.password);
+  const finalUser = new User(user);
+  finalUser["setPassword"](user.password);
 
   return finalUser.save()
-      .then(() => res.json({ user: finalUser.toAuthJSON() }));
+      .then(async () => res.json({ user: await finalUser["toAuthJSON"]() }));
 });
 
 //POST login route (optional, everyone has access)
-router.post('/login', auth.optional, (req, res, next) => {
+router.post('/login', auth.optional, (req: Requst, res: Response, next: Next) => {
   const { body: { user } } = req;
 
   if(!user.email) {
-    return res.status(422).json({
+    return res.status(422).send({
       errors: {
         email: 'is required',
       },
@@ -53,7 +54,7 @@ router.post('/login', auth.optional, (req, res, next) => {
   }
 
   if(!user.password) {
-    return res.status(422).json({
+    return res.status(422).send({
       errors: {
         password: 'is required',
       },
@@ -72,21 +73,21 @@ router.post('/login', auth.optional, (req, res, next) => {
       return res.json({ user: user.toAuthJSON() });
     }
 
-    return status(400).info;
+    return res.status(400).send(info);
   })(req, res, next);
 });
 
 //GET current route (required, only authenticated users have access)
-router.get('/current', auth.required, (req, res, next) => {
-  const { payload: { id } } = req;
+router.get('/current', auth.required, (req: Requst, res: Response, next: Next) => {
+  const { payload: { email } } = req;
 
-  return Users.findById(id)
+  return User.get({email: email})
       .then((user) => {
         if(!user) {
           return res.sendStatus(400);
         }
 
-        return res.json({ user: user.toAuthJSON() });
+        return res.json({ user: user["toAuthJSON"]() });
       });
 });
 

@@ -3,13 +3,14 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www"
+    "start": "nodemon build/bin/www"
   },
   "dependencies": {
     "@types/node": "^14.11.10",
     "aws-sdk": "^2.771.0",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
+    "dynamoose": "^2.3.0",
     "express": "~4.16.1",
     "express-jwt": "^5.3.1",
     "http-errors": "~1.6.3",
