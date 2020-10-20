@@ -26,7 +26,7 @@ User.methods.document.set("validatePassword", function (password: string) {
     return this.hash === hash;
 });
 
-User.methods.document.set("generateJWT", function() {
+User.methods.document.set("generateJWT", async function() {
     const expirationDate = new Date();
     expirationDate.setDate(new Date().getDate() + 60);
 
@@ -38,11 +38,11 @@ User.methods.document.set("generateJWT", function() {
 })
 
 
-User.methods.document.set("toAuthJSON", function () {
+User.methods.document.set("toAuthJSON", async function () {
     return {
         _id: this._id,
         email: this.email,
-        token: this["generateJWT"](),
+        token: await this["generateJWT"](),
 
     };
 });

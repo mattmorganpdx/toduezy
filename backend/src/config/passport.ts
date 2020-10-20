@@ -3,7 +3,7 @@ const passport = require('passport')
 
 const LocalStrategy = require('passport-local');
 
-const User = require("../models/Users");
+import User from "../models/Users";
 
 
 passport.use('passport-local', new LocalStrategy({

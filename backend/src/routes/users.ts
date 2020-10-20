@@ -1,5 +1,5 @@
 import * as dynamoose from "dynamoose";
-import passport from 'passport'
+import * as passport from 'passport'
 const router = require('express').Router();
 const auth = require('./auth');
 import {Requst, Response, Next} from "express"
@@ -61,7 +61,7 @@ router.post('/login', auth.optional, (req: Requst, res: Response, next: Next) =>
     });
   }
 
-  return passport.authenticate('local', { session: false }, (err, passportUser, info) => {
+  return passport.authenticate('passport-local', { session: false }, async (err, passportUser, info) => {
     if(err) {
       return next(err);
     }
@@ -70,7 +70,7 @@ router.post('/login', auth.optional, (req: Requst, res: Response, next: Next) =>
       const user = passportUser;
       user.token = passportUser.generateJWT();
 
-      return res.json({ user: user.toAuthJSON() });
+      return res.json({ user: await user.toAuthJSON() });
     }
 
     return res.status(400).send(info);
@@ -82,12 +82,12 @@ router.get('/current', auth.required, (req: Requst, res: Response, next: Next) =
   const { payload: { email } } = req;
 
   return User.get({email: email})
-      .then((user) => {
+      .then(async (user) => {
         if(!user) {
           return res.sendStatus(400);
         }
 
-        return res.json({ user: user["toAuthJSON"]() });
+        return res.json({ user: await user["toAuthJSON"]() });
       });
 });
 
