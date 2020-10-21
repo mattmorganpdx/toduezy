@@ -4,6 +4,7 @@ import * as path from 'path'
 import * as cookieParser from 'cookie-parser'
 import * as logger from 'morgan'
 import * as dynamoose from "dynamoose";
+import * as cors from "cors";
 
 // Create new DynamoDB instance
 dynamoose.aws.sdk.config.update({
@@ -14,6 +15,11 @@ dynamoose.aws.sdk.config.update({
 
 // Set DynamoDB instance to the Dynamoose DDB instance
 /*dynamoose.aws.ddb.set(ddb);*/
+
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
 
 dynamoose.aws.ddb.local();
 
@@ -27,6 +33,7 @@ const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
+app.use(cors(corsOptions))
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -42,11 +49,9 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res, next) {
-  console.log(`Caught error ${err}`)
   // set locals, only providing error in development
   res.locals.message = err.message;
-  //res.locals.error = req.app.get('env') === 'development' ? err : {};
-  res.locals.error = err;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page
   res.status(err.status || 500);

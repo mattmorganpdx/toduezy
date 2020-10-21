@@ -20,9 +20,17 @@ export default function LoginForm({loginContext, setLoginContext}: Props) {
 
 
     const userLogin = async (login: Login) => {
-        await fetch('login', {method: "POST", body: JSON.stringify(login)}).then(
+        await fetch('http://localhost:3001/users/login',
+            {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({user: login})
+            }).then(
             res => {
                 if (res.status === 200) {
+                    res.json().then(json => console.log(json.user.token))
                     return Promise.resolve();
                 } else {
                     return Promise.reject();

@@ -44,8 +44,9 @@ router.post('/', auth.optional, (req: Requst, res: Response, next: Next) => {
 //POST login route (optional, everyone has access)
 router.post('/login', auth.optional, (req: Requst, res: Response, next: Next) => {
   const { body: { user } } = req;
+  console.log(req.body)
 
-  if(!user.email) {
+  if(!user || !user.email) {
     return res.status(422).send({
       errors: {
         email: 'is required',

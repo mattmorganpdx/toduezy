@@ -4,7 +4,7 @@ import {mockApiServer} from './mockApi/Users';
 import LoginForm from "./pages/LoginForm"
 import ToDo from "./pages/ToDo";
 
-mockApiServer();
+//mockApiServer();
 
 export default function App() {
 
