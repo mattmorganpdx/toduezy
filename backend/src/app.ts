@@ -17,7 +17,8 @@ dynamoose.aws.sdk.config.update({
 /*dynamoose.aws.ddb.set(ddb);*/
 
 const corsOptions = {
-  origin: 'http://localhost:3000',
+  origin: ['http://localhost:3000', 'http://localhost:3001'],
+  credentials: true,
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 
@@ -27,6 +28,7 @@ require('./models/Users');
 require('./config/passport');
 const indexRouter = require('./routes');
 const usersRouter = require('./routes/users');
+const tasksRouter = require('./routes/tasks')
 
 const app = express();
 
@@ -41,6 +43,7 @@ app.use(cookieParser());
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/api/tasks', tasksRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

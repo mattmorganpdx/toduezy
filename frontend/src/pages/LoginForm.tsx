@@ -26,11 +26,11 @@ export default function LoginForm({loginContext, setLoginContext}: Props) {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                credentials: 'include',
                 body: JSON.stringify({user: login})
             }).then(
             res => {
-                if (res.status === 200) {
-                    res.json().then(json => console.log(json.user.token))
+                if (res.status === 200 || res.status === 204) {
                     return Promise.resolve();
                 } else {
                     return Promise.reject();

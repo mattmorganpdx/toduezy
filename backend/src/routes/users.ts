@@ -1,4 +1,3 @@
-import * as dynamoose from "dynamoose";
 import * as passport from 'passport'
 const router = require('express').Router();
 const auth = require('./auth');
@@ -7,7 +6,6 @@ import User from "../models/Users";
 
 //POST new user route (optional, everyone has access)
 router.post('/', auth.optional, (req: Requst, res: Response, next: Next) => {
-  console.log(req.body)
   const { body: { user } } = req;
 
   if(!user) {
@@ -36,7 +34,6 @@ router.post('/', auth.optional, (req: Requst, res: Response, next: Next) => {
 
   const finalUser = new User(user);
   finalUser["setPassword"](user.password);
-
   return finalUser.save()
       .then(async () => res.json({ user: await finalUser["toAuthJSON"]() }));
 });
@@ -68,10 +65,12 @@ router.post('/login', auth.optional, (req: Requst, res: Response, next: Next) =>
     }
 
     if(passportUser) {
-      const user = passportUser;
-      user.token = passportUser.generateJWT();
-
-      return res.json({ user: await user.toAuthJSON() });
+      res.cookie('token', await passportUser.generateJWT(), {
+        maxAge: 1000000000,
+        secure: false, // set to true if your using https
+        httpOnly: true,
+      })
+      return res.status(204).send()
     }
 
     return res.status(400).send(info);

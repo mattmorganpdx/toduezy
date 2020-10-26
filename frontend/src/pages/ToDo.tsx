@@ -26,10 +26,11 @@ export default function ToDo({loginContext, setLoginContext}: Props) {
     let [users, setUsers] = useState([]);
 
     let loadUsers = () => {
-        fetch("/api/users")
+        fetch("http://localhost:3001/api/tasks", {
+            credentials: 'include',
+        })
             .then((res) => res.json())
             .then((json) => {
-                console.log(json)
                 setUsers(json.users)
             })
     }
@@ -56,7 +57,7 @@ export default function ToDo({loginContext, setLoginContext}: Props) {
                             <AccordionIcon/>
                         </AccordionHeader>
                         <AccordionPanel pb={4}>
-                            {user.tasks?.filter(task => task.status !== "DELETED").map((task: Task, idx:number) => (
+                            {user.tasks?.filter(task => task.status !== "DELETED").map((task: Task, idx: number) => (
                                 <TaskItem key={idx} task={task} contactId={user.id} loadUsers={loadUsers}/>
                             ))}
                             <AddTask contactId={user.id} loadUsers={loadUsers}/>

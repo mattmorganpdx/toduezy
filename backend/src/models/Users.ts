@@ -1,11 +1,21 @@
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 import * as dynamoose from "dynamoose";
+import { v4 as uuidV4 } from 'uuid';
 
 const UsersSchema = new dynamoose.Schema(
     {
-        email: String,
-        userId: String,
+        email: {
+            type: String,
+            required: true,
+        },
+        displayName: String,
+        userId: {
+            type: String,
+            required: true,
+            default: uuidV4,
+            forceDefault: true
+        },
         hash: String,
         salt: String,
     }, {
@@ -40,7 +50,7 @@ User.methods.document.set("generateJWT", async function() {
 
 User.methods.document.set("toAuthJSON", async function () {
     return {
-        _id: this._id,
+        userId: this.userId,
         email: this.email,
         token: await this["generateJWT"](),
 
