@@ -42,7 +42,7 @@ User.methods.document.set("generateJWT", async function() {
 
     return jwt.sign({
         email: this.email,
-        id: this._id,
+        id: this.userId,
         exp: expirationDate.getTime() / 1000,
     }, 'secret');
 })

@@ -1,11 +1,37 @@
-import * as passport from 'passport'
+import {Next, Requst, Response} from "express"
+import Contact from "../models/Contacts";
+import Task from "../models/Tasks";
+
 const router = require('express').Router();
 const auth = require('./auth');
-import {Requst, Response, Next} from "express"
+
+async function getContacts(userId: string) {
+    try {
+        const contacts = await Contact.query({parentId: userId}).exec()
+        const tasks = await Task.query()
+    } catch (e) {
+
+    }
+    return
+}
 
 router.get('/', auth.required, (req: Requst, res: Response, next: Next) => {
     res.status(200)
-    return res.json({users: [
+    const {payload: {id}} = req;
+    console.log(id)
+    getContacts(id).then(contacts => {
+        return res.json({
+                users: contacts.map(doc => {
+                    return {
+                        id: doc["contactId"],
+                        name: doc["displayName"],
+                        tasks: []
+                    }
+                })
+            }
+        )
+    });
+    /*return res.json({users: [
             {id: 1, name: "Bob", tasks: []},
             {
                 id: 2,
@@ -32,7 +58,7 @@ router.get('/', auth.required, (req: Requst, res: Response, next: Next) => {
                     status: "OPEN"
                 }]
             }
-        ]})
+        ]})*/
 })
 
 module.exports = router;

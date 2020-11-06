@@ -1,9 +1,8 @@
 import * as dynamoose from "dynamoose";
-import { v4 as uuidV4 } from 'uuid';
 
 const ContactsSchema = new dynamoose.Schema(
     {
-        parentID: {
+        parentId: {
             hashKey: true,
             type: String
         },
@@ -11,8 +10,6 @@ const ContactsSchema = new dynamoose.Schema(
             rangeKey: true,
             type: String,
             required: true,
-            default: uuidV4,
-            forceDefault: true
         },
         displayName: String
     }, {
@@ -23,4 +20,4 @@ const ContactsSchema = new dynamoose.Schema(
 
 const Contact = dynamoose.model("Contact", ContactsSchema, {"create": true});
 
-export default Task
+export default Contact

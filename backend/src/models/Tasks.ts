@@ -1,9 +1,9 @@
 import * as dynamoose from "dynamoose";
-import { v4 as uuidV4 } from 'uuid';
+import {v4 as uuidV4} from 'uuid';
 
 const TasksSchema = new dynamoose.Schema(
     {
-        parentID: {
+        parentId: {
             hashKey: true,
             type: String
         },
@@ -11,8 +11,6 @@ const TasksSchema = new dynamoose.Schema(
             rangeKey: true,
             type: String,
             required: true,
-            default: uuidV4,
-            forceDefault: true
         },
         displayName: String
     }, {
@@ -22,6 +20,17 @@ const TasksSchema = new dynamoose.Schema(
 );
 
 const Task = dynamoose.model("Task", TasksSchema, {"create": true});
+
+Task.methods.set("createTask",  function (userId, contactId) {
+    const taskId = uuidV4()
+    console.log(`hello ${taskId}`)
+    return new Task({
+        parentId: userId,
+        taskId: `${contactId}#${taskId}`
+    }).save()
+
+
+})
 
 export default Task
 
