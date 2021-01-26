@@ -5,10 +5,24 @@ import Task from "../models/Tasks";
 const router = require('express').Router();
 const auth = require('./auth');
 
+type TaskType = {
+    id?: number,
+    description?: string
+    parent: number
+    status?: "OPEN" | "COMPLETE" | "DELETED"
+}
+
 async function getContacts(userId: string) {
     try {
-        const contacts = await Contact.query({parentId: userId}).exec()
-        const tasks = await Task.query()
+        const contacts = await Contact.query({parentId: userId}).exec();
+        const tasks = await Task.query({parentId: userId}).exec();
+        return contacts.map(doc => {
+            return {
+                id: doc["contactId"],
+                name: doc["displayName"],
+                tasks: tasks.filter(task => task.taskId.startsWith(doc["contactId"]))
+            }
+        })
     } catch (e) {
 
     }
@@ -21,13 +35,7 @@ router.get('/', auth.required, (req: Requst, res: Response, next: Next) => {
     console.log(id)
     getContacts(id).then(contacts => {
         return res.json({
-                users: contacts.map(doc => {
-                    return {
-                        id: doc["contactId"],
-                        name: doc["displayName"],
-                        tasks: []
-                    }
-                })
+                users: contacts
             }
         )
     });

@@ -10,14 +10,14 @@ function mockApiServer() {
                 id: 2,
                 name: "Alice",
                 tasks: [{
-                    id: 1,
+                    taskId: 1,
                     description: "Send Email",
-                    parent: 2,
+                    parentId: 2,
                     status: "OPEN",
                 }, {
-                    id: 2,
+                    taskId: 2,
                     description: "Schedule Meeting",
-                    parent: 2,
+                    parentId: 2,
                     status: "OPEN",
                 }]
             },
@@ -25,9 +25,9 @@ function mockApiServer() {
                 id: 3,
                 name: "Matt",
                 tasks: [{
-                    id: 1,
+                    taskId: 1,
                     description: "eat lunch",
-                    parent: 3,
+                    parentId: 3,
                     status: "OPEN"
                 }]
             }
@@ -65,13 +65,13 @@ function mockApiServer() {
         let task: Task = JSON.parse(request.requestBody);
         if (!task.description)
             task.description = "";
-        if (!task.id) {
-            task.id = nextTaskId++;
+        if (!task.taskId) {
+            task.taskId = nextTaskId++;
             task.status = "OPEN"
             mockUsers.users
-                .find(user => user.id === task.parent)?.tasks?.push(task)
+                .find(user => user.id === task.parentId)?.tasks?.push(task)
         } else {
-            mockUsers.users.find(user => user.id === task.parent)?.tasks?.find(t => t.id === task.id)?.description?.replace(/\*/, task.description);
+            mockUsers.users.find(user => user.id === task.parentId)?.tasks?.find(t => t.taskId === task.taskId)?.description?.replace(/\*/, task.description);
         }
         return task
     });
@@ -79,11 +79,11 @@ function mockApiServer() {
     server.delete("/api/tasks", (schema, request) => {
         let taskToDelete: Task = JSON.parse(request.requestBody);
         console.log(taskToDelete)
-        if (taskToDelete.id && taskToDelete.parent) {
-            const userIndex = mockUsers.users.findIndex(user => user.id === taskToDelete.parent)
+        if (taskToDelete.taskId && taskToDelete.parentId) {
+            const userIndex = mockUsers.users.findIndex(user => user.id === taskToDelete.parentId)
             let task;
             if (userIndex)
-                task = mockUsers.users[userIndex].tasks?.find(t => t.id === taskToDelete.id)
+                task = mockUsers.users[userIndex].tasks?.find(t => t.taskId === taskToDelete.taskId)
             if (task)
                 task.status = "DELETED"
 
@@ -94,11 +94,11 @@ function mockApiServer() {
     server.put("/api/tasks", (schema, request) => {
         let taskToDelete: Task = JSON.parse(request.requestBody);
         console.log(taskToDelete)
-        if (taskToDelete.id && taskToDelete.parent) {
-            const userIndex = mockUsers.users.findIndex(user => user.id === taskToDelete.parent)
+        if (taskToDelete.taskId && taskToDelete.parentId) {
+            const userIndex = mockUsers.users.findIndex(user => user.id === taskToDelete.parentId)
             let task;
             if (userIndex)
-                task = mockUsers.users[userIndex].tasks?.find(t => t.id === taskToDelete.id)
+                task = mockUsers.users[userIndex].tasks?.find(t => t.taskId === taskToDelete.taskId)
             if (task)
                 task.status = "COMPLETE"
 

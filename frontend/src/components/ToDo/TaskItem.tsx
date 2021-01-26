@@ -25,16 +25,16 @@ export default function TaskItem({task, contactId, loadUsers}: Props) {
             .then(() => loadUsers())
     }
 
-    return (<SimpleGrid key={`${task.id}-grid`} columns={2} spacing={10}>
-            <Editable key={`${task.id}-task`} defaultValue={task.description}
-                      onSubmit={e => onUpdate(task.id, contactId, e)}>
+    return (<SimpleGrid key={`${task.taskId}-grid`} columns={2} spacing={10}>
+            <Editable key={`${task.taskId}-task`} defaultValue={task.description}
+                      onSubmit={e => onUpdate(task.taskId, contactId, e)}>
                 <EditablePreview
                     textDecoration={task.status === "COMPLETE" ? "line-through" : ""}/>
                 <EditableInput/>
             </Editable>
-            <SimpleGrid key={`${task.id}-grid-inner`} columns={2} spacing={5}>
+            <SimpleGrid key={`${task.taskId}-grid-inner`} columns={2} spacing={5}>
                 <IconButton
-                    key={`${task.id}-complete`}
+                    key={`${task.taskId}-complete`}
                     icon={"check"}
                     aria-label={"complete item"}
                     variant={"ghost"}
@@ -43,12 +43,12 @@ export default function TaskItem({task, contactId, loadUsers}: Props) {
                     isRound={true}
                     onClick={(e: React.MouseEvent<any>) => {
                         e.preventDefault();
-                        completeTask(contactId, task.id).then()
+                        completeTask(contactId, task.taskId).then()
                     }}
                     children={null}
                 />
                 <IconButton
-                    key={`${task.id}-delete`}
+                    key={`${task.taskId}-delete`}
                     icon={"delete"}
                     aria-label={"delete item"}
                     variant={"ghost"}
@@ -57,7 +57,7 @@ export default function TaskItem({task, contactId, loadUsers}: Props) {
                     isRound={true}
                     onClick={(e: React.MouseEvent<any>) => {
                         e.preventDefault();
-                        deleteTask(contactId, task.id).then()
+                        deleteTask(contactId, task.taskId).then()
                     }}
                     children={null}
                 />

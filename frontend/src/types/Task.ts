@@ -1,6 +1,6 @@
 export interface Task {
-    id?: number,
+    taskId?: number,
     description?: string
-    parent: number
+    parentId: number
     status?: "OPEN" | "COMPLETE" | "DELETED"
 }

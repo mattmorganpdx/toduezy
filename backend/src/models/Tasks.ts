@@ -12,7 +12,7 @@ const TasksSchema = new dynamoose.Schema(
             type: String,
             required: true,
         },
-        displayName: String
+        description: String
     }, {
         "saveUnknown": true,
         "timestamps": true
@@ -26,7 +26,8 @@ Task.methods.set("createTask",  function (userId, contactId) {
     console.log(`hello ${taskId}`)
     return new Task({
         parentId: userId,
-        taskId: `${contactId}#${taskId}`
+        taskId: `${contactId}#${taskId}`,
+        description: "test item xxx"
     }).save()
 
 

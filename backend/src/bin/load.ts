@@ -16,11 +16,11 @@ dynamoose.aws.ddb.local();
 
 // Create User
 async function createUser() {
-    const user = new User({email: "matt@mattmorgan.dev", displayName: "Matt Morgan"});
-    user["setPassword"]("passw0rd");
+    const user = new User({email: "admin@test.com", displayName: "Matt Morgan"});
+    user["setPassword"]("tVF!n@UiAS9K6Ly");
     try {
         await user.save();
-        const userFromDB = await User.get({email: "matt@mattmorgan.dev"});
+        const userFromDB = await User.get({email: "admin@test.com"});
         return userFromDB["userId"]
     } catch (e) {
 

@@ -63,8 +63,6 @@ export default function LoginForm({loginContext, setLoginContext}: Props) {
                     ...prevState,
                     error: 'Invalid username or password',
                     isLoading: false,
-                    email: '',
-                    password: '',
                     showPassword: false
                 };
             })
